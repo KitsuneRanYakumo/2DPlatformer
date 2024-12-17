@@ -18,7 +18,7 @@ public class Way : MonoBehaviour
         {
             if (currentCheckPoint == _checkPoints[i])
             {
-                int numberNextCheckPoint = i++ % _checkPoints.Length;
+                int numberNextCheckPoint = (i + 1) % _checkPoints.Length;
                 return _checkPoints[numberNextCheckPoint];
             }
         }

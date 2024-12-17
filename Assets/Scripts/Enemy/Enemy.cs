@@ -12,11 +12,16 @@ public class Enemy : MonoBehaviour
         _currentPoint = _way.GetNextCheckPoint(_currentPoint);
     }
 
-    private void FixedUpdate()
+    private void OnTriggerEnter2D(Collider2D collision)
     {
-        if (transform.position == _currentPoint.transform.position)
+        if (collision.gameObject.TryGetComponent(out CheckPoint point) && _currentPoint == point)
+        {
             _currentPoint = _way.GetNextCheckPoint(_currentPoint);
+        }
+    }
 
-        transform.position = Vector3.MoveTowards(transform.position, _currentPoint.transform.position, _moveSpeed);
+    private void Update()
+    {
+        transform.position = Vector2.MoveTowards(transform.position, _currentPoint.transform.position, _moveSpeed * Time.deltaTime);
     }
 }

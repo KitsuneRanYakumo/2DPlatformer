@@ -1,91 +1,64 @@
 using UnityEngine;
 
-[RequireComponent(typeof(UserInput), typeof(SpriteRenderer), typeof(Animator))]
+[RequireComponent(typeof(UserInput), typeof(Rigidbody2D))]
 public class Player : MonoBehaviour
 {
-    private readonly int _moveTrigger = Animator.StringToHash("IsMoving");
-
     [SerializeField] private float _moveSpeed;
-    [SerializeField] private float _forceJump;
+    [SerializeField] private float _forceJump = 3;
     [SerializeField] private Transform _raycastPoint;
     [SerializeField] private float _rayLength;
 
     private UserInput _userInput;
-    private SpriteRenderer _sprite;
-    private Animator _animator;
-
-    private Vector2 _moveDirection;
-    private Vector2 _gravityDirection = Vector2.down;
+    private Rigidbody2D _rigidbody;
     private int _amountCoins;
 
-    private bool _isMoving => _moveDirection.x != 0;
+    public Vector2 Direction {  get; private set; }
 
-    private bool _isGrounded => TryTouchPlatform();
+    public bool IsMoving => Direction.x != 0;
+
+    public bool IsFalling => _rigidbody.velocity.y < 0;
+
+    public bool IsGrounded => TryTouchPlatform();
 
     private void Awake()
     {
         _userInput = GetComponent<UserInput>();
-        _sprite = GetComponent<SpriteRenderer>();
-        _animator = GetComponent<Animator>();
+        _rigidbody = GetComponent<Rigidbody2D>();
     }
 
-    private void FixedUpdate()
+    private void Update()
     {
-        SetMoveDirection();
-
-        if (_isGrounded && _userInput.IsPressedJumpButton)
-            SetJumpDirection();
-
-        _moveDirection += _gravityDirection;
-
-        if (_isMoving)
-            AnimateMove();
-
         Move();
-    }
 
-    private void OnTriggerEnter(Collider other)
+        if (IsGrounded && _userInput.IsPressedJumpButton)
+            Jump();
+    }
+    
+    private void OnTriggerEnter2D(Collider2D collider)
     {
-        if (other.TryGetComponent(out Coin coin))
-        {
+        if (collider.gameObject.TryGetComponent(out Coin coin))
             PickUpCoin(coin);
-        }
     }
 
     private void Move()
     {
-        transform.Translate(_moveSpeed * _moveDirection);
+        Direction = new Vector2(_userInput.HorizontalMovement, 0);
+        transform.Translate(_moveSpeed * Time.deltaTime * Direction);
     }
 
-    private void SetMoveDirection()
+    private void Jump()
     {
-        _moveDirection = new Vector2(_userInput.HorizontalMovement, 0);
-    }
-
-    private void AnimateMove()
-    {
-        DetermineSpriteFlipX();
-        _animator.SetBool(_moveTrigger, _isMoving);
-    }
-
-    private void DetermineSpriteFlipX()
-    {
-        if (_moveDirection.x > 0)
-            _sprite.flipX = false;
-        else if (_moveDirection.x < 0)
-            _sprite.flipX = true;
-    }
-
-    private void SetJumpDirection()
-    {
-        _moveDirection += _forceJump * Vector2.up;
+        _rigidbody.AddForce(_forceJump * Vector2.up);
     }
 
     private bool TryTouchPlatform()
     {
         RaycastHit2D hit = Physics2D.Raycast(_raycastPoint.position, Vector3.down, _rayLength);
 
-        if (hit.collider != null && hit.collider.GetComponent<Planform>() != null)
+        if (hit.collider == null)
+            return false;
+
+        if (hit.collider.GetComponent<Platform>() != null)
             return true;
 
         return false;
@@ -95,5 +68,11 @@ public class Player : MonoBehaviour
     {
         coin.BecomeTaken();
         _amountCoins++;
+        Log();
+    }
+
+    private void Log()
+    {
+        Debug.Log($"Количество монет - {_amountCoins}.");
     }
 }
