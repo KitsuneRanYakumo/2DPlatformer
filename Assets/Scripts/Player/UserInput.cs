@@ -6,7 +6,7 @@ public class UserInput : MonoBehaviour
 
     [SerializeField] private KeyCode _jumpButton = KeyCode.Space;
 
-    public bool IsPressedJumpButton => Input.GetKeyUp(_jumpButton);
-
     public float HorizontalMovement => Input.GetAxis(Horizontal);
+
+    public bool IsPressedJumpButton => Input.GetKeyUp(_jumpButton);
 }

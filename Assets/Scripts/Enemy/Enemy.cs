@@ -6,6 +6,9 @@ public class Enemy : MonoBehaviour
     [SerializeField] private Way _way;
 
     private CheckPoint _currentPoint;
+    private float _pastPositionByX;
+
+    public float Direction => _pastPositionByX - transform.position.x;
 
     private void Start()
     {
@@ -22,6 +25,12 @@ public class Enemy : MonoBehaviour
 
     private void Update()
     {
+        Move();
+    }
+
+    private void Move()
+    {
+        _pastPositionByX = transform.position.x;
         transform.position = Vector2.MoveTowards(transform.position, _currentPoint.transform.position, _moveSpeed * Time.deltaTime);
     }
 }
