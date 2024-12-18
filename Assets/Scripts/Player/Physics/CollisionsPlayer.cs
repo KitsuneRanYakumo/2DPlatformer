@@ -9,7 +9,6 @@ public class CollisionsPlayer : MonoBehaviour
     [SerializeField] private float _delayReleaseRay = 1;
 
     private Player _player;
-    private bool _isPlaying;
     private WaitForSeconds _wait;
 
     public bool IsTouchPlatform { get; private set; }
@@ -22,7 +21,6 @@ public class CollisionsPlayer : MonoBehaviour
 
     private void Start()
     {
-        _isPlaying = true;
         StartCoroutine(TryTouchPlatform());
     }
 
@@ -34,7 +32,7 @@ public class CollisionsPlayer : MonoBehaviour
 
     private IEnumerator TryTouchPlatform()
     {
-        while (_isPlaying)
+        while (enabled)
         {
             RaycastHit2D hit = Physics2D.Raycast(_raycastPoint.position, Vector3.down, _rayLength);
 
