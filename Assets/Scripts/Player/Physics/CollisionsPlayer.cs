@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using UnityEngine;
 
@@ -10,6 +11,8 @@ public class CollisionsPlayer : MonoBehaviour
 
     private Player _player;
     private WaitForSeconds _wait;
+
+    public event Action<Enemy> FacedWithEnemy;
 
     public bool IsTouchPlatform { get; private set; }
 
@@ -26,8 +29,17 @@ public class CollisionsPlayer : MonoBehaviour
 
     private void OnTriggerEnter2D(Collider2D collider)
     {
-        if (collider.gameObject.TryGetComponent(out Coin coin))
-            PickUpCoin(coin);
+        if (collider.gameObject.TryGetComponent(out Item item))
+            PickUpItem(item);
+    }
+
+    private void OnCollisionEnter2D(Collision2D collision)
+    {
+        if (collision.gameObject.TryGetComponent(out Enemy enemy))
+            FacedWithEnemy?.Invoke(enemy);
+
+        if (collision.gameObject.GetComponent<Enemy>())
+            _player.Jump();
     }
 
     private IEnumerator TryTouchPlatform()
@@ -39,13 +51,9 @@ public class CollisionsPlayer : MonoBehaviour
             if (hit.collider)
             {
                 if (hit.collider.GetComponent<Platform>() != null)
-                {
                     IsTouchPlatform = true;
-                }
                 else
-                {
                     IsTouchPlatform = false;
-                }
             }
             else
             {
@@ -56,9 +64,18 @@ public class CollisionsPlayer : MonoBehaviour
         }
     }
 
-    private void PickUpCoin(Coin coin)
+    private void PickUpItem(Item item)
     {
-        coin.BecomeTaken();
-        _player.IncreaseAmountCoins();
+        switch (item)
+        {
+            case Coin coin:
+                coin.BecomeTaken();
+                _player.IncreaseAmountCoins();
+                return;
+            case Treatment treatment:
+                treatment.BecomeTaken();
+                _player.Heal(treatment.AmountHealth);
+                return;
+        }
     }
 }
