@@ -74,7 +74,7 @@ public class Player : MonoBehaviour
             DamageTaken?.Invoke();
         }
 
-        if (_health < 0)
+        if (_health <= 0)
         {
             Destroy(gameObject);
         }
@@ -82,12 +82,8 @@ public class Player : MonoBehaviour
 
     public void Heal(float amount)
     {
-        Debug.Log($"Здоровье до лечения - {_health}.");
-
         if (amount > 0)
             _health = Mathf.MoveTowards(_health, _maxHealth, amount);
-
-        Debug.Log($"Здоровье после лечения - {_health}.");
     }
 
     public void Jump()

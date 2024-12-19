@@ -10,7 +10,7 @@ public class CollisionsEnemy : MonoBehaviour
 
     private Enemy _enemy;
     private WaitForSeconds _wait;
-    private bool _isSeePlayer = false;
+    private bool _isSeePlayer;
     private Vector2 _directionRay;
 
     public event Action<Transform> PlayerDetected;
@@ -67,8 +67,8 @@ public class CollisionsEnemy : MonoBehaviour
             {
                 if (hit.collider.gameObject.TryGetComponent(out Player player))
                 {
-                    PlayerDetected?.Invoke(player.transform);
                     _isSeePlayer = true;
+                    PlayerDetected?.Invoke(player.transform);
                 }
             }
 

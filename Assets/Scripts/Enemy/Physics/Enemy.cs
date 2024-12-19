@@ -73,7 +73,7 @@ public class Enemy : MonoBehaviour
             DamageTaken?.Invoke();
         }
 
-        if (_health < 0)
+        if (_health <= 0)
         {
             Destroy(gameObject);
         }
