@@ -8,7 +8,7 @@ public class CollisionsEnemy : MonoBehaviour
     [SerializeField] private float _viewingDelay = 0.2f;
 
     private Player _huntedPlayer;
-    private bool _isSeePlayer;
+    private bool _canSeePlayer;
     private WaitForSeconds _wait;
     private Vector2 _directionRay;
     private float _pastPositionByX;
@@ -49,14 +49,14 @@ public class CollisionsEnemy : MonoBehaviour
     private IEnumerator HuntPlayer()
     {
         Player player = null;
-        _isSeePlayer = false;
+        _canSeePlayer = false;
 
-        while (_isSeePlayer == false)
+        while (_canSeePlayer == false)
         {
             RaycastHit2D hit = Physics2D.Raycast(transform.position, _directionRay, _viewingRange);
 
             if (hit.collider)
-                _isSeePlayer = hit.collider.gameObject.TryGetComponent(out player);
+                _canSeePlayer = hit.collider.gameObject.TryGetComponent(out player);
 
             yield return _wait;
         }
@@ -69,12 +69,12 @@ public class CollisionsEnemy : MonoBehaviour
     private IEnumerator CalculateSqrDistanceToPlayer()
     {
         Vector2 directionToPlayer;
-        _isSeePlayer = true;
+        _canSeePlayer = true;
 
-        while (_isSeePlayer)
+        while (_canSeePlayer)
         {
             directionToPlayer = _huntedPlayer.transform.position - transform.position;
-            _isSeePlayer = directionToPlayer.sqrMagnitude < _viewingRange * _viewingRange;
+            _canSeePlayer = directionToPlayer.sqrMagnitude < _viewingRange * _viewingRange;
             yield return _wait;
         }
 

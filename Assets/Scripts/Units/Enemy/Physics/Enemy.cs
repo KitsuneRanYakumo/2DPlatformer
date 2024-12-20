@@ -2,7 +2,7 @@ using System;
 using UnityEngine;
 
 [RequireComponent(typeof(CollisionsEnemy))]
-public class Enemy : Unit
+public class Enemy : Unit, IDamageble
 {
     [SerializeField] private Way _way;
     [SerializeField] private float _moveSpeed;
@@ -10,8 +10,7 @@ public class Enemy : Unit
 
     private CollisionsEnemy _collisionsEnemy;
     private Transform _target;
-    private float _health = 100;
-    private float _minHealth = 0;
+    private Health _health = new Health();
 
     public event Action DamageTaken;
 
@@ -40,17 +39,13 @@ public class Enemy : Unit
 
     private void Start()
     {
+        _health.Initialize();
         ChooseCheckPoint(CurrentPoint);
-    }
-
-    private void FixedUpdate()
-    {
-        Move();
     }
 
     private void Update()
     {
-        PastPositionByX = transform.position.x;
+        Move();
     }
 
     private void ChooseCheckPoint(CheckPoint point)
@@ -64,25 +59,23 @@ public class Enemy : Unit
 
     public void TakeDamage(float damage)
     {
-        if (damage > 0)
-        {
-            _health = Mathf.MoveTowards(_health, _minHealth, damage);
-            DamageTaken?.Invoke();
-        }
+        _health.TakeDamage(damage);
+        DamageTaken?.Invoke();
 
-        if (_health <= 0)
-        {
-            Destroy(gameObject);
-        }
+        if (_health.Amount > 0)
+            return;
+        
+        Destroy(gameObject);
     }
 
-    private void Attack(Player player)
+    private void Attack(IDamageble unit)
     {
-        player.TakeDamage(_damage);
+        unit.TakeDamage(_damage);
     }
 
     private void Move()
     {
+        PastPositionByX = transform.position.x;
         transform.position = Vector2.MoveTowards(transform.position, _target.position, _moveSpeed * Time.fixedDeltaTime);
     }
 

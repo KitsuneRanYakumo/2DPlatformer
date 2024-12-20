@@ -2,7 +2,7 @@ using System;
 using UnityEngine;
 
 [RequireComponent(typeof(UserInput), typeof(Rigidbody2D), typeof(CollisionsPlayer))]
-public class Player : Unit
+public class Player : Unit, IDamageble
 {
     [SerializeField] private float _moveSpeed = 8;
     [SerializeField] private float _forceJump = 500;
@@ -13,9 +13,7 @@ public class Player : Unit
     private CollisionsPlayer _collisionPlayer;
     private bool _isJump = false;
 
-    private float _health = 100;
-    private float _maxHealth = 100;
-    private float _minHealth = 0;
+    private Health _health = new Health();
     private int _amountCoins = 0;
 
     public event Action DamageTaken;
@@ -45,10 +43,13 @@ public class Player : Unit
         _collisionPlayer = GetComponent<CollisionsPlayer>();
     }
 
+    private void Start()
+    {
+        _health.Initialize();
+    }
+
     private void FixedUpdate()
     {
-        Move();
-
         if (_isJump)
         {
             Jump();
@@ -58,7 +59,7 @@ public class Player : Unit
 
     private void Update()
     {
-        PastPositionByX = transform.position.x;
+        Move();
         
         if (IsGrounded == false)
             return;
@@ -71,26 +72,24 @@ public class Player : Unit
 
     public void TakeDamage(float damage)
     {
-        if (damage > 0)
-        {
-            _health = Mathf.MoveTowards(_health, _minHealth, damage);
-            DamageTaken?.Invoke();
-        }
+        _health.TakeDamage(damage);
+        DamageTaken?.Invoke();
 
-        if (_health <= 0)
-        {
-            Destroy(gameObject);
-        }
+        if (_health.Amount > 0)
+            return;
+
+        Destroy(gameObject);
     }
 
-    private void Attack(Enemy enemy)
+    private void Attack(IDamageble unit)
     {
-        enemy.TakeDamage(_damage);
+        unit.TakeDamage(_damage);
         Jump();
     }
 
     private void Move()
     {
+        PastPositionByX = transform.position.x;
         Vector2 direction = _moveSpeed * Time.fixedDeltaTime * _userInput.DirectionHorizontalMovement * Vector2.right;
         transform.Translate(direction);
     }
@@ -122,9 +121,10 @@ public class Player : Unit
 
     private void Heal(Treatment treatment)
     {
-        if (treatment.AmountHealth > 0)
-            _health = Mathf.MoveTowards(_health, _maxHealth, treatment.AmountHealth);
-
+        if (treatment.AmountHealth <= 0)
+            return;
+        
+        _health.Heal(treatment.AmountHealth);
         treatment.BecomeTaken();
     }
 }
