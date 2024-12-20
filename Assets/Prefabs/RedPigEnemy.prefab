@@ -64,7 +64,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _way: {fileID: 0}
   _moveSpeed: 5
-  _maxDistanceToPlayer: 100
   _damage: 10
 --- !u!61 &8205902457569299407
 BoxCollider2D:
@@ -150,7 +149,7 @@ GameObject:
   - component: {fileID: 6428533725566577562}
   - component: {fileID: 219748614192316196}
   - component: {fileID: 2621586697463308123}
-  - component: {fileID: 5547057063807559078}
+  - component: {fileID: 8413854368113215669}
   m_Layer: 0
   m_Name: RedPigEnemyView
   m_TagString: Untagged
@@ -216,7 +215,7 @@ SpriteRenderer:
   m_SortingOrder: 0
   m_Sprite: {fileID: 3474578761864754926, guid: 6991e54fe8bb5724bafb4aba16583d49, type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
-  m_FlipX: 0
+  m_FlipX: 1
   m_FlipY: 0
   m_DrawMode: 0
   m_Size: {x: 2.25, y: 1.875}
@@ -259,7 +258,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _enemy: {fileID: 6138061878741526879}
---- !u!114 &5547057063807559078
+--- !u!114 &8413854368113215669
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -268,7 +267,7 @@ MonoBehaviour:
   m_GameObject: {fileID: 2849634104351091219}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 4a90a62d7a05ab04dbc7ec4de6a8e410, type: 3}
+  m_Script: {fileID: 11500000, guid: 8d633b1485076fc4e83d862e3734723e, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _enemy: {fileID: 6138061878741526879}
+  _unit: {fileID: 0}

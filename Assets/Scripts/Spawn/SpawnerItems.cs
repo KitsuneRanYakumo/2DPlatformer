@@ -12,6 +12,7 @@ public class SpawnerItems : MonoBehaviour
     
     private ObjectPool<Item> _poolCoins;
     private int _maxSizePool;
+
     private List<PointSpawn> _vacantPoints;
     private PointSpawn _currentPoint;
 
@@ -36,7 +37,7 @@ public class SpawnerItems : MonoBehaviour
             createFunc: CreateForPool,
             actionOnGet: OnGetFromPool,
             actionOnRelease: OnReleaseInPool,
-            actionOnDestroy: Destroy,
+            actionOnDestroy: OnDestroyForPool,
             collectionCheck: true,
             defaultCapacity: _defaultAmountCoinsInPool,
             maxSize: _maxSizePool);
@@ -62,6 +63,11 @@ public class SpawnerItems : MonoBehaviour
     {
         item.gameObject.SetActive(false);
         item.WasPickedUp -= TakeCoin;
+    }
+
+    private void OnDestroyForPool(Item item)
+    {
+        Destroy(item.gameObject);
     }
 
     private void TakeCoin(Item item, PointSpawn point)

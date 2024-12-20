@@ -64,7 +64,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _way: {fileID: 0}
   _moveSpeed: 5
-  _maxDistanceToPlayer: 100
   _damage: 10
 --- !u!61 &5795052664100769888
 BoxCollider2D:
@@ -148,9 +147,9 @@ GameObject:
   m_Component:
   - component: {fileID: 4570007047793759334}
   - component: {fileID: 739277876806117521}
-  - component: {fileID: 411810485107231680}
   - component: {fileID: 6217434193267734733}
   - component: {fileID: 2685970636505261171}
+  - component: {fileID: 4651007150203465172}
   m_Layer: 0
   m_Name: RadishEnemyView
   m_TagString: Untagged
@@ -216,7 +215,7 @@ SpriteRenderer:
   m_SortingOrder: 0
   m_Sprite: {fileID: 6862589947206935886, guid: 3714f31227c136a4ab2e9544f5e109d4, type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
-  m_FlipX: 0
+  m_FlipX: 1
   m_FlipY: 0
   m_DrawMode: 0
   m_Size: {x: 1.875, y: 2.375}
@@ -225,19 +224,6 @@ SpriteRenderer:
   m_WasSpriteAssigned: 1
   m_MaskInteraction: 0
   m_SpriteSortPoint: 0
---- !u!114 &411810485107231680
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 4402546697129644150}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 4a90a62d7a05ab04dbc7ec4de6a8e410, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  _enemy: {fileID: 5667119601175511100}
 --- !u!95 &6217434193267734733
 Animator:
   serializedVersion: 5
@@ -272,3 +258,16 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _enemy: {fileID: 5667119601175511100}
+--- !u!114 &4651007150203465172
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4402546697129644150}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 8d633b1485076fc4e83d862e3734723e, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _unit: {fileID: 0}
