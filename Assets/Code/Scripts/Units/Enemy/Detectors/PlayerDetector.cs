@@ -2,7 +2,7 @@ using System;
 using System.Collections;
 using UnityEngine;
 
-public class CollisionsEnemy : MonoBehaviour
+public class PlayerDetector : MonoBehaviour
 {
     [SerializeField] private float _viewingRange = 10;
     [SerializeField] private float _viewingDelay = 0.2f;
@@ -16,7 +16,6 @@ public class CollisionsEnemy : MonoBehaviour
     public event Action<Transform> PlayerDetected;
     public event Action PlayerEscaped;
     public event Action<Player> FacedWithPlayer;
-    public event Action<CheckPoint> ComeToCheckPoint;
 
     private void Awake()
     {
@@ -25,25 +24,14 @@ public class CollisionsEnemy : MonoBehaviour
 
     private void Start()
     {
+        _pastPositionByX = transform.position.x;
         StartCoroutine(HuntPlayer());
-    }
-
-    private void OnTriggerEnter2D(Collider2D other)
-    {
-        if (other.TryGetComponent(out CheckPoint point))
-            ComeToCheckPoint?.Invoke(point);
     }
 
     private void OnCollisionEnter2D(Collision2D collision)
     {
         if (collision.gameObject.TryGetComponent(out Player player))
             FacedWithPlayer?.Invoke(player);
-    }
-
-    private void Update()
-    {
-        DetermineDirectionRay();
-        _pastPositionByX = transform.position.x;
     }
 
     private IEnumerator HuntPlayer()
@@ -53,6 +41,8 @@ public class CollisionsEnemy : MonoBehaviour
 
         while (_canSeePlayer == false)
         {
+            DetermineDirectionRay();
+            _pastPositionByX = transform.position.x;
             RaycastHit2D hit = Physics2D.Raycast(transform.position, _directionRay, _viewingRange);
 
             if (hit.collider)

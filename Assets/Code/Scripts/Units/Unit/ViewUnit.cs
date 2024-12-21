@@ -14,9 +14,9 @@ public class ViewUnit : MonoBehaviour
 
     private void DetermineRotationByY()
     {
-        if (_unit.Direction > 0)
+        if (_unit.Mover.DirectionByX > 0)
             transform.rotation = Quaternion.Euler(_rightRotationByY * Vector2.up);
-        else if (_unit.Direction < 0)
+        else if (_unit.Mover.DirectionByX < 0)
             transform.rotation = Quaternion.Euler(_leftRotationByY * Vector2.up);
     }
 }

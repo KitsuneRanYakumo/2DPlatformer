@@ -3,9 +3,9 @@ using UnityEngine;
 [RequireComponent(typeof(Animator))]
 public class ControllerAnimatorEnemy : MonoBehaviour
 {
-    private readonly int _takeDamageTrigger = Animator.StringToHash("TakeDamageTrigger");
-
     [SerializeField] private Enemy _enemy;
+
+    private readonly int _takeDamageTrigger = Animator.StringToHash("TakeDamageTrigger");
 
     private Animator _animator;
 

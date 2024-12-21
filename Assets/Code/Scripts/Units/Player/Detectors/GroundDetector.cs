@@ -1,17 +1,13 @@
-using System;
 using System.Collections;
 using UnityEngine;
 
-public class CollisionsPlayer : MonoBehaviour
+public class GroundDetector : MonoBehaviour
 {
     [SerializeField] private Transform _raycastPoint;
-    [SerializeField] private float _rayLength;
-    [SerializeField] private float _delayReleaseRay = 1;
+    [SerializeField] private float _rayLength = 1.02f;
+    [SerializeField] private float _delayReleaseRay = 0.2f;
 
     private WaitForSeconds _wait;
-
-    public event Action<Enemy> FacedWithEnemy;
-    public event Action<Item> ItemFound;
 
     public bool IsTouchPlatform { get; private set; }
 
@@ -23,18 +19,6 @@ public class CollisionsPlayer : MonoBehaviour
     private void Start()
     {
         StartCoroutine(TryTouchPlatform());
-    }
-
-    private void OnTriggerEnter2D(Collider2D collider)
-    {
-        if (collider.gameObject.TryGetComponent(out Item item))
-            ItemFound?.Invoke(item);
-    }
-
-    private void OnCollisionEnter2D(Collision2D collision)
-    {
-        if (collision.gameObject.TryGetComponent(out Enemy enemy))
-            FacedWithEnemy?.Invoke(enemy);
     }
 
     private IEnumerator TryTouchPlatform()
