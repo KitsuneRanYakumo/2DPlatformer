@@ -24,7 +24,7 @@ public class ControllerAnimatorEnemy : MonoBehaviour
         _animator = GetComponent<Animator>();
     }
 
-    private void SetDamageTrigger()
+    private void SetDamageTrigger(float damage)
     {
         _animator.SetTrigger(_takeDamageTrigger);
     }

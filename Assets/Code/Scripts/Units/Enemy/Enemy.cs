@@ -1,16 +1,13 @@
 using System;
 using UnityEngine;
 
-[RequireComponent(typeof(PlayerDetector), typeof(ControllerTarget))]
+[RequireComponent(typeof(ControllerTarget), typeof(PlayerDetector))]
 public class Enemy : Unit, IDamageble
 {
-    [SerializeField] private float _damage = 10;
+    
 
-    private Health _health;
-    private PlayerDetector _playerDetector;
     private ControllerTarget _controllerTarget;
-
-    public event Action DamageTaken;
+    private PlayerDetector _playerDetector;
 
     public CheckPoint CurrentPoint { get; private set; }
 
@@ -27,8 +24,8 @@ public class Enemy : Unit, IDamageble
     private void Awake()
     {
         Mover = GetComponent<Mover>();
-        _playerDetector = GetComponent<PlayerDetector>();
         _controllerTarget = GetComponent<ControllerTarget>();
+        _playerDetector = GetComponent<PlayerDetector>();
     }
 
     private void Start()
@@ -42,25 +39,9 @@ public class Enemy : Unit, IDamageble
         Mover.Move(direction);
     }
 
-    public void TakeDamage(float damage)
-    {
-        _health.TakeDamage(damage);
-        DamageTaken?.Invoke();
-
-        if (_health.Amount > 0)
-            return;
-        
-        Destroy(gameObject);
-    }
-
-    private void Attack(IDamageble unit)
-    {
-        unit.TakeDamage(_damage);
-    }
-
     private void Initialize()
     {
-        _health = new Health();
-        _health.Initialize();
+        Health = new Health();
+        Health.Initialize();
     }
 }

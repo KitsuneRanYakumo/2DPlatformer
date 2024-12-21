@@ -17,10 +17,6 @@ public class Player : Unit, IDamageble
 
     private int _amountCoins;
 
-    public event Action<float> DamageTaken;
-
-    public Health Health { get; private set; }
-
     public bool IsMoving => Mover.DirectionByX != 0;
 
     public bool IsFalling => _jumper.DirectionByY < 0;
@@ -29,14 +25,14 @@ public class Player : Unit, IDamageble
 
     private void OnEnable()
     {
-        _enemyDetector.FacedWithEnemy += Attack;
         _collector.CoinTaken += IncreaseAmountCoins;
+        _enemyDetector.FacedWithEnemy += Attack;
     }
 
     private void OnDisable()
     {
-        _enemyDetector.FacedWithEnemy -= Attack;
         _collector.CoinTaken -= IncreaseAmountCoins;
+        _enemyDetector.FacedWithEnemy -= Attack;
     }
 
     private void Awake()
@@ -77,12 +73,7 @@ public class Player : Unit, IDamageble
         _isJump = true;
     }
 
-    public void TakeDamage(float damage)
-    {
-        DamageTaken?.Invoke(damage);
-    }
-
-    private void Attack(IDamageble unit)
+    protected override void Attack(IDamageble unit)
     {
         unit.TakeDamage(_damage);
         _jumper.Jump();
