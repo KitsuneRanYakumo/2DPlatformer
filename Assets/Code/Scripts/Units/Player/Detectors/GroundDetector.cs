@@ -32,6 +32,8 @@ public class GroundDetector : MonoBehaviour
             else
                 IsTouchPlatform = false;
 
+            Debug.Log(IsTouchPlatform);
+
             yield return _wait;
         }
     }

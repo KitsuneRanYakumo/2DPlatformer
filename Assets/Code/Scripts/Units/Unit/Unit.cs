@@ -1,24 +1,30 @@
 using System;
 using UnityEngine;
 
-[RequireComponent(typeof(Mover))]
+[RequireComponent(typeof(Mover), typeof(Health))]
 public class Unit : MonoBehaviour
 {
-    private float _damage = 10;
+    [SerializeField] protected float Damage = 10;
+
+    public event Action<float> DamageTaken;
 
     public Mover Mover { get; protected set; }
 
     public Health Health { get; protected set; }
 
-    public event Action<float> DamageTaken;
-
     public void TakeDamage(float damage)
     {
+        Health.TakeDamage(damage);
         DamageTaken?.Invoke(damage);
     }
 
     protected virtual void Attack(IDamageble unit)
     {
-        unit.TakeDamage(_damage);
+        unit.TakeDamage(Damage);
+    }
+
+    protected void Destroy()
+    {
+        Destroy(gameObject);
     }
 }

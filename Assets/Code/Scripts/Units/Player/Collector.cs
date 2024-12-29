@@ -6,8 +6,13 @@ public class Collector : MonoBehaviour
 {
     private ItemsDetector _itemsDetector;
 
-    public event Action<Treatment> TreatmentTaken;
+    public event Action<float> TreatmentTaken;
     public event Action CoinTaken;
+
+    private void Awake()
+    {
+        _itemsDetector = GetComponent<ItemsDetector>();
+    }
 
     private void OnEnable()
     {
@@ -17,11 +22,6 @@ public class Collector : MonoBehaviour
     private void OnDisable()
     {
         _itemsDetector.ItemFound -= PickUpItem;
-    }
-
-    private void Awake()
-    {
-        _itemsDetector = GetComponent<ItemsDetector>();
     }
 
     public void PickUpItem(Item item)
@@ -41,7 +41,7 @@ public class Collector : MonoBehaviour
     private void TakeTreatment(Treatment treatment)
     {
         treatment.BecomeTaken();
-        TreatmentTaken?.Invoke(treatment);
+        TreatmentTaken?.Invoke(treatment.Amount);
     }
 
     private void TakeCoins(Coin coin)

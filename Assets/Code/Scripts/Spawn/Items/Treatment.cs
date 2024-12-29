@@ -2,5 +2,7 @@ using UnityEngine;
 
 public class Treatment : Item
 {
-    public float AmountHealth { get; private set; } = 100;
+    [SerializeField] private float _amount = 25;
+
+    public float Amount => _amount;
 }

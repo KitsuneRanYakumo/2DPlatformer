@@ -13,19 +13,14 @@ public class ControllerAnimatorPlayer : MonoBehaviour
 
     private Animator _animator;
 
-    private void OnEnable()
-    {
-        _player.DamageTaken += SetDamageTrigger;
-    }
-
-    private void OnDisable()
-    {
-        _player.DamageTaken -= SetDamageTrigger;
-    }
-
     private void Awake()
     {
         _animator = GetComponent<Animator>();
+    }
+
+    private void OnEnable()
+    {
+        _player.DamageTaken += SetDamageTrigger;
     }
 
     private void Update()
@@ -40,6 +35,11 @@ public class ControllerAnimatorPlayer : MonoBehaviour
             return;
 
         _animator.SetTrigger(_jumpTrigger);
+    }
+
+    private void OnDisable()
+    {
+        _player.DamageTaken -= SetDamageTrigger;
     }
 
     private void SetDamageTrigger(float damage)

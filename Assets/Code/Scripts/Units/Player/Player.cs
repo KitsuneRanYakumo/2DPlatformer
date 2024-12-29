@@ -5,8 +5,6 @@ using UnityEngine;
 [RequireComponent(typeof(GroundDetector), typeof(EnemyDetector))]
 public class Player : Unit, IDamageble
 {
-    [SerializeField] private float _damage = 10;
-
     private UserInput _userInput;
     private Jumper _jumper;
     private bool _isJump;
@@ -23,26 +21,17 @@ public class Player : Unit, IDamageble
 
     public bool IsGrounded => _groundDetector.IsTouchPlatform;
 
+    private void Awake()
+    {
+        SetComponents();
+    }
+
     private void OnEnable()
     {
         _collector.CoinTaken += IncreaseAmountCoins;
+        _collector.TreatmentTaken += Heal;
         _enemyDetector.FacedWithEnemy += Attack;
-    }
-
-    private void OnDisable()
-    {
-        _collector.CoinTaken -= IncreaseAmountCoins;
-        _enemyDetector.FacedWithEnemy -= Attack;
-    }
-
-    private void Awake()
-    {
-        _userInput = GetComponent<UserInput>();
-        Mover = GetComponent<Mover>();
-        _jumper = GetComponent<Jumper>();
-        _collector = GetComponent<Collector>();
-        _groundDetector = GetComponent<GroundDetector>();
-        _enemyDetector = GetComponent<EnemyDetector>();
+        Health.AmountWasted += Destroy;
     }
 
     private void Start()
@@ -73,9 +62,17 @@ public class Player : Unit, IDamageble
         _isJump = true;
     }
 
+    private void OnDisable()
+    {
+        _collector.CoinTaken -= IncreaseAmountCoins;
+        _collector.TreatmentTaken -= Heal;
+        _enemyDetector.FacedWithEnemy -= Attack;
+        Health.AmountWasted -= Destroy;
+    }
+
     protected override void Attack(IDamageble unit)
     {
-        unit.TakeDamage(_damage);
+        unit.TakeDamage(Damage);
         _jumper.Jump();
     }
 
@@ -84,10 +81,25 @@ public class Player : Unit, IDamageble
         _amountCoins++;
     }
 
+    private void Heal(float treatment)
+    {
+        Health.TakeTreatment(treatment);
+    }
+
+    private void SetComponents()
+    {
+        _userInput = GetComponent<UserInput>();
+        Health = GetComponent<Health>();
+        Mover = GetComponent<Mover>();
+        _jumper = GetComponent<Jumper>();
+        _collector = GetComponent<Collector>();
+        _groundDetector = GetComponent<GroundDetector>();
+        _enemyDetector = GetComponent<EnemyDetector>();
+    }
+
     private void Initialize()
     {
         _isJump = false;
-        Health = new Health();
         Health.Initialize();
         _amountCoins = 0;
     }

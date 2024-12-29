@@ -9,6 +9,11 @@ public class ControllerAnimatorEnemy : MonoBehaviour
 
     private Animator _animator;
 
+    private void Awake()
+    {
+        _animator = GetComponent<Animator>();
+    }
+
     private void OnEnable()
     {
         _enemy.DamageTaken += SetDamageTrigger;
@@ -17,11 +22,6 @@ public class ControllerAnimatorEnemy : MonoBehaviour
     private void OnDisable()
     {
         _enemy.DamageTaken -= SetDamageTrigger;
-    }
-
-    private void Awake()
-    {
-        _animator = GetComponent<Animator>();
     }
 
     private void SetDamageTrigger(float damage)
