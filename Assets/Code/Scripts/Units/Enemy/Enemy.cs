@@ -2,16 +2,15 @@ using System;
 using UnityEngine;
 
 [RequireComponent(typeof(TargetFinder), typeof(PlayerDetector))]
-public class Enemy : Unit, IDamageble
+public class Enemy : Unit
 {
     private TargetFinder _targetFinder;
     private PlayerDetector _playerDetector;
 
-    public CheckPoint CurrentPoint { get; private set; }
-
-    private void Awake()
+    protected override void OnAwake()
     {
-        SetComponents();
+        _targetFinder = GetComponent<TargetFinder>();
+        _playerDetector = GetComponent<PlayerDetector>();
     }
 
     private void OnEnable()
@@ -35,14 +34,6 @@ public class Enemy : Unit, IDamageble
     {
         _playerDetector.FacedWithPlayer -= Attack;
         Health.AmountWasted -= Destroy;
-    }
-
-    private void SetComponents()
-    {
-        Health = GetComponent<Health>();
-        Mover = GetComponent<Mover>();
-        _targetFinder = GetComponent<TargetFinder>();
-        _playerDetector = GetComponent<PlayerDetector>();
     }
 
     private void Initialize()

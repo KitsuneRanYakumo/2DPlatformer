@@ -6,15 +6,15 @@ public class Health : MonoBehaviour
     [SerializeField] private float _minAmount = 0;
     [SerializeField] private float _maxAmount = 100;
 
-    private float _amount;
-
     public event Action<float, float> AmountChanged;
     public event Action AmountWasted;
 
+    public float Amount { get; private set; }
+
     public void Initialize()
     {
-        _amount = _maxAmount;
-        AmountChanged?.Invoke(_amount, _maxAmount);
+        Amount = _maxAmount;
+        AmountChanged?.Invoke(Amount, _maxAmount);
     }
 
     public void TakeTreatment(float treatment)
@@ -22,8 +22,8 @@ public class Health : MonoBehaviour
         if (treatment < 0)
             return;
 
-        _amount = Mathf.MoveTowards(_amount, _maxAmount, treatment);
-        AmountChanged?.Invoke(_amount, _maxAmount);
+        Amount = Mathf.MoveTowards(Amount, _maxAmount, treatment);
+        AmountChanged?.Invoke(Amount, _maxAmount);
     }
 
     public void TakeDamage(float damage)
@@ -31,10 +31,10 @@ public class Health : MonoBehaviour
         if (damage < 0)
             return;
 
-        _amount = Mathf.MoveTowards(_amount, _minAmount, damage);
-        AmountChanged?.Invoke(_amount, _maxAmount);
+        Amount = Mathf.MoveTowards(Amount, _minAmount, damage);
+        AmountChanged?.Invoke(Amount, _maxAmount);
 
-        if (_amount > 0)
+        if (Amount > 0)
             return;
 
         AmountWasted?.Invoke();

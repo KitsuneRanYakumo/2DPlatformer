@@ -13,7 +13,7 @@ GameObject:
   - component: {fileID: 2523962775520761786}
   - component: {fileID: 2840758128102822929}
   - component: {fileID: 1245620531296573258}
-  m_Layer: 0
+  m_Layer: 8
   m_Name: Strawberry
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -120,6 +120,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: cae258a7dca158843bed002250e20e15, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  _amount: 25
 --- !u!58 &1245620531296573258
 CircleCollider2D:
   m_ObjectHideFlags: 0

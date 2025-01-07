@@ -3,8 +3,10 @@ using UnityEngine;
 
 [RequireComponent(typeof(UserInput), typeof(Jumper), typeof(Collector))]
 [RequireComponent(typeof(GroundDetector), typeof(EnemyDetector))]
-public class Player : Unit, IDamageble
+public class Player : Unit
 {
+    [SerializeField] private Vampirism _vampirism;
+
     private UserInput _userInput;
     private Jumper _jumper;
     private bool _isJump;
@@ -21,9 +23,13 @@ public class Player : Unit, IDamageble
 
     public bool IsGrounded => _groundDetector.IsTouchPlatform;
 
-    private void Awake()
+    protected override void OnAwake()
     {
-        SetComponents();
+        _userInput = GetComponent<UserInput>();
+        _jumper = GetComponent<Jumper>();
+        _collector = GetComponent<Collector>();
+        _groundDetector = GetComponent<GroundDetector>();
+        _enemyDetector = GetComponent<EnemyDetector>();
     }
 
     private void OnEnable()
@@ -32,6 +38,7 @@ public class Player : Unit, IDamageble
         _collector.TreatmentTaken += Heal;
         _enemyDetector.FacedWithEnemy += Attack;
         Health.AmountWasted += Destroy;
+        _vampirism.Occurred += Heal;
     }
 
     private void Start()
@@ -53,13 +60,18 @@ public class Player : Unit, IDamageble
         Vector2 direction = _userInput.DirectionHorizontalMovement * Vector2.right;
         Mover.Move(direction);
 
-        if (IsGrounded == false)
-            return;
+        if (_userInput.IsPressedVampirismButton)
+        {
+            _vampirism.Switch();
+        }
 
-        if (_userInput.IsPressedJumpButton == false)
-            return;
-
-        _isJump = true;
+        if (IsGrounded)
+        {
+            if (_userInput.IsPressedJumpButton)
+            {
+                _isJump = true;
+            }
+        }
     }
 
     private void OnDisable()
@@ -68,6 +80,7 @@ public class Player : Unit, IDamageble
         _collector.TreatmentTaken -= Heal;
         _enemyDetector.FacedWithEnemy -= Attack;
         Health.AmountWasted -= Destroy;
+        _vampirism.Occurred -= Heal;
     }
 
     protected override void Attack(IDamageble unit)
@@ -84,17 +97,6 @@ public class Player : Unit, IDamageble
     private void Heal(float treatment)
     {
         Health.TakeTreatment(treatment);
-    }
-
-    private void SetComponents()
-    {
-        _userInput = GetComponent<UserInput>();
-        Health = GetComponent<Health>();
-        Mover = GetComponent<Mover>();
-        _jumper = GetComponent<Jumper>();
-        _collector = GetComponent<Collector>();
-        _groundDetector = GetComponent<GroundDetector>();
-        _enemyDetector = GetComponent<EnemyDetector>();
     }
 
     private void Initialize()
